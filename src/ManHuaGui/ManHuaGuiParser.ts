@@ -62,3 +62,29 @@ export const parseMangaDetails = ($: cheerio.Root, mangaId: string): Manga => {
         lastUpdate: lastUpdated,
     })
 }
+
+export const parseChapters = ($: cheerio.Root, mangaId: string): Chapter[] => {
+    const rawChapters = $('ul > li > a.status0')
+    const chapters: Chapter[] = []
+
+    for (const rawChapter of rawChapters) {
+        const $el = $(rawChapter)
+        const url = $el.attr('href') ?? ''
+        const name = $el.text() ?? ''
+        // if can't find url, error
+        const id = url.split('/')[3] ?? ''
+        const chapNum = parseInt((name.match(/\d+/) ?? ['0'])[0] ?? '0', 10)
+
+        chapters.push(
+            createChapter({
+                id: id,
+                name: name,
+                mangaId: mangaId,
+                langCode: LanguageCode.CHINEESE,
+                chapNum: chapNum,
+            })
+        )
+    }
+
+    return chapters
+}

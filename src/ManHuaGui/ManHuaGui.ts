@@ -15,9 +15,7 @@ import {
     Request,
     Response,
 } from 'paperback-extensions-common'
-import {
-    parseMangaDetails,
-} from './ManHuaGuiParser'
+import { parseMangaDetails, parseChapters } from './ManHuaGuiParser'
 
 const MHG_DOMAIN = 'https://www.manhuagui.com'
 
@@ -49,5 +47,17 @@ export class ManHuaGui extends Source {
         const response = await this.requestManager.schedule(request, 1)
         const $ = this.cheerio.load(response.data)
         return parseMangaDetails($, mangaId)
+    }
+
+    async getChapters(mangaId: string): Promise<Chapter[]> {
+        const request = createRequestObject({
+            url: `${MHG_DOMAIN}/comic`,
+            method: 'GET',
+            param: mangaId,
+        })
+
+        const response = await this.requestManager.schedule(request, 1)
+        const $ = this.cheerio.load(response.data)
+        return parseChapters($, mangaId)
     }
 }
