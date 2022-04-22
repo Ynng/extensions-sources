@@ -69,7 +69,7 @@ export const parseMangaDetails = ($: cheerio.Root, mangaId: string): Manga => {
 }
 
 export const parseChapters = ($: cheerio.Root, mangaId: string): Chapter[] => {
-    const rawChapters = $('ul > li > a.status0')
+    const rawChapters = $('ul > li > a.status0').toArray()
     const chapters: Chapter[] = []
 
     for (const rawChapter of rawChapters) {
