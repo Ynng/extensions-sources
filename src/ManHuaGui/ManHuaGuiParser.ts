@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import vm from 'vm'
 import moment from 'moment'
 import {
     Chapter,
@@ -118,19 +117,22 @@ export const parseChapterDetails = (
     // get the javascript eval
     const evalString = evalMatch[1] ?? ''
 
-    const context = {
-        imageInfo: {
-            files: [],
-            path: '',
-        },
+    // eslint-disable-next-line prefer-const
+    let imageInfo = {
+        files: [],
+        path: '',
     }
-    vm.createContext(context)
-    vm.runInContext(jsDecodeFunc + 'eval' + evalString, context)
-    const imageData = context.imageInfo
+    eval(jsDecodeFunc + 'eval' + evalString)
+
+    const imageData = imageInfo
+
+    console.log(imageInfo)
 
     const images: string[] = imageData.files.map((image: string) => {
-        return `${IMAGE_SERVERS[0]}${imageData.path}${image}`
+        return `${IMAGE_SERVERS[0]}${encodeURI(imageData.path)}${image}`
     })
+
+    console.log(images)
 
     return createChapterDetails({
         id: chapterId,
@@ -215,7 +217,11 @@ export const parseHomeSections = (
             const url = $('a.bcover', manga).attr('href') ?? ''
             const id = url.split('/')[2] ?? ''
             const title = $('a.bcover', manga).attr('title') ?? ''
-            const image = `https:${$('a.bcover > img', manga).attr('src')}`
+            // image could be on src or data-src
+            const image = `https:${
+                $('a.bcover > img', manga).attr('src') ??
+                $('a.bcover > img', manga).attr('data-src')
+            }`
             mangaArray.push(
                 createMangaTile({
                     id: id,
