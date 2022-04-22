@@ -1,4 +1,4 @@
-# Ynng's Paperback Repo
+# [Ynng's Paperback Extensions](https://extensions.ynng.ca/)
 [Github Repo](https://github.com/Ynng/extensions-sources)
 
 List of sources:

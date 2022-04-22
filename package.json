@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "Ynng's Paperback Extensions",
   "repositoryName": "Ynng's Extensions",
-  "baseURL": "https://ynng.github.io/extensions-sources/",
+  "baseURL": "https://extensions.ynng.ca/",
+  "sources": [
+    {
+      "name": "ManHuaGui(漫画柜)"
+    }
+  ],
   
   "main": "index.js",
   "scripts": {
@@ -14,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Paperback-iOS/extensions-official.git"
+    "url": "git+https://github.com/Ynng/extension-sources.git"
   },
   "author": "Paperback Community",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/Paperback-iOS/extensions-official/issues"
+    "url": "https://github.com/Ynng/extension-sources/issues"
   },
-  "homepage": "https://github.com/Paperback-iOS/extensions-official#readme",
+  "homepage": "https://extensions.ynng.ca/",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^3.0.0",
