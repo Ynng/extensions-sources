@@ -15,7 +15,11 @@ import {
     Request,
     Response,
 } from 'paperback-extensions-common'
-import { parseMangaDetails, parseChapters } from './ManHuaGuiParser'
+import {
+    parseMangaDetails,
+    parseChapters,
+    parseChapterDetails,
+} from './ManHuaGuiParser'
 
 const MHG_DOMAIN = 'https://www.manhuagui.com'
 
@@ -33,13 +37,36 @@ export const ManHuaGuiInfo: SourceInfo = {
 }
 
 export class ManHuaGui extends Source {
+    requestManager = createRequestManager({
+        requestsPerSecond: 5,
+        requestTimeout: 20000,
+        interceptor: {
+            interceptRequest: async (request: Request): Promise<Request> => {
+                request.headers = {
+                    ...(request.headers ?? {}),
+                    ...{
+                        referer: MHG_DOMAIN,
+                    },
+                }
+
+                return request
+            },
+
+            interceptResponse: async (
+                response: Response
+            ): Promise<Response> => {
+                return response
+            },
+        },
+    })
+
     override getMangaShareUrl(mangaId: string): string {
         return `${MHG_DOMAIN}/comic/${mangaId}`
     }
 
     async getMangaDetails(mangaId: string): Promise<Manga> {
         const request = createRequestObject({
-            url: `${MHG_DOMAIN}/comic`,
+            url: `${MHG_DOMAIN}/comic/`,
             method: 'GET',
             param: mangaId,
         })
@@ -51,7 +78,7 @@ export class ManHuaGui extends Source {
 
     async getChapters(mangaId: string): Promise<Chapter[]> {
         const request = createRequestObject({
-            url: `${MHG_DOMAIN}/comic`,
+            url: `${MHG_DOMAIN}/comic/`,
             method: 'GET',
             param: mangaId,
         })
@@ -59,5 +86,20 @@ export class ManHuaGui extends Source {
         const response = await this.requestManager.schedule(request, 1)
         const $ = this.cheerio.load(response.data)
         return parseChapters($, mangaId)
+    }
+
+    async getChapterDetails(
+        mangaId: string,
+        chapterId: string
+    ): Promise<ChapterDetails> {
+        const request = createRequestObject({
+            url: `${MHG_DOMAIN}/comic/`,
+            method: 'GET',
+            param: `${mangaId}/${chapterId}.html`,
+        })
+
+        const response = await this.requestManager.schedule(request, 1)
+        const $ = this.cheerio.load(response.data)
+        return parseChapterDetails($, mangaId, chapterId, response.data)
     }
 }

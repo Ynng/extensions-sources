@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+import { map } from 'cheerio/lib/api/traversing'
 import moment from 'moment'
 import {
     Chapter,
@@ -11,6 +12,10 @@ import {
     MangaTile,
     TagSection,
 } from 'paperback-extensions-common'
+import { evalManHuaGui } from './ManHuaGuiHelper.js'
+
+const MHG_DOMAIN = 'https://www.manhuagui.com'
+const IMAGE_SERVERS = ['https://i.hamreus.com', 'https://cf.hamreus.com']
 
 export const parseMangaDetails = ($: cheerio.Root, mangaId: string): Manga => {
     const titles = $('div.book-title')
@@ -87,4 +92,43 @@ export const parseChapters = ($: cheerio.Root, mangaId: string): Chapter[] => {
     }
 
     return chapters
+}
+
+export const parseChapterDetails = (
+    $: cheerio.Root,
+    mangaId: string,
+    chapterId: string,
+    rawResponse: string
+): ChapterDetails => {
+    // get the number of pages
+    const pageSelector = $('#pageSelect')
+    // page count is the number of children of the page selector
+    const pageCount = pageSelector.children().length
+
+    // Page list is javascript eval encoded and LZString encoded
+    // regex to find the javascript eval
+    const evalRe = /window\[".*?"\](\(.*\)\s*\{[\s\S]+\}\s*\(.*\))/
+    const evalMatch = evalRe.exec(rawResponse)
+    if (evalMatch === null) {
+        throw new Error('Could not find eval')
+    }
+    // get the javascript eval
+    let evalString = evalMatch[1] ?? ''
+    // strip the window[xxxx]
+    evalString = evalString.replace(/window\[".*?"\]/g, '').trim()
+    // strip the () on the beginning and end
+    evalString = evalString.replace(/^\(/, '').replace(/\)$/, '')
+    // eval the javascript eval
+    const imageData = evalManHuaGui(evalString)
+
+    const images: string[] = imageData.files.map((image: string) => {
+        return `${IMAGE_SERVERS[0]}${imageData.path}${image}`
+    })
+
+    return createChapterDetails({
+        id: chapterId,
+        mangaId: mangaId,
+        pages: images,
+        longStrip: false,
+    })
 }
