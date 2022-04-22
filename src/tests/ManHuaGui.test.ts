@@ -12,7 +12,7 @@ describe('ManHuaGui Tests', () => {
     const expect = chai.expect
     chai.use(chaiAsPromised)
 
-    const mangaId = '17332' // kaguya sama
+    const mangaId = '34439'
 
     it('Retrieve Manga Details', async () => {
         const details = await wrapper.getMangaDetails(source, mangaId)
@@ -35,7 +35,7 @@ describe('ManHuaGui Tests', () => {
 
         expect(data, 'No chapters present for: [' + mangaId + ']').to.not.be
             .empty
-
+        
         const entry = data[0]
         expect(entry?.id, 'No ID present').to.not.be.empty
         expect(entry?.name, 'No title available').to.not.be.empty
@@ -50,6 +50,7 @@ describe('ManHuaGui Tests', () => {
             mangaId,
             chapters[0]?.id ?? 'unknown'
         )
+
         expect(data, 'No server response').to.exist
         expect(data, 'Empty server response').to.not.be.empty
 

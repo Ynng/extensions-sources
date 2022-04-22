@@ -74,7 +74,7 @@ export const parseChapters = ($: cheerio.Root, mangaId: string): Chapter[] => {
         const name = $el.attr('title') ?? ''
         // remove .html from id
         const id = (url.split('/')[3] ?? '').replace(/\.html$/, '')
-        const chapNum = parseInt((name.match(/\d+/) ?? ['0'])[0] ?? '0', 10)
+        const chapNum = parseFloat((name.match(/[\d.]+/) ?? ['0'])[0] ?? '0')
 
         chapters.push(
             createChapter({
@@ -126,13 +126,9 @@ export const parseChapterDetails = (
 
     const imageData = imageInfo
 
-    console.log(imageInfo)
-
     const images: string[] = imageData.files.map((image: string) => {
         return `${IMAGE_SERVERS[0]}${encodeURI(imageData.path)}${image}`
     })
-
-    console.log(images)
 
     return createChapterDetails({
         id: chapterId,
