@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable modules-newline/import-declaration-newline */
 import cheerio from 'cheerio'
-import { APIWrapper, Source } from 'paperback-extensions-common'
+import { APIWrapper, Source, SearchRequest } from 'paperback-extensions-common'
 import { ManHuaGui } from '../ManHuaGui/ManHuaGui'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
@@ -56,5 +56,22 @@ describe('ManHuaGui Tests', () => {
         expect(data.id, 'Missing ID').to.be.not.empty
         expect(data.mangaId, 'Missing MangaID').to.be.not.empty
         expect(data.pages, 'No pages present').to.be.not.empty
+    })
+
+    it('Testing search', async () => {
+        const testSearch: SearchRequest = {
+            title: '爱',
+            parameters: {},
+        }
+
+        const search = await wrapper.searchRequest(source, testSearch, 1)
+        const result = search.results[0]
+
+        expect(result, 'No response from server').to.exist
+
+        expect(result?.id, 'No ID found for search query').to.be.not.empty
+        expect(result?.image, 'No image found for search').to.be.not.empty
+        expect(result?.title, 'No title').to.be.not.null
+        expect(result?.subtitleText, 'No subtitle text').to.be.not.null
     })
 })
