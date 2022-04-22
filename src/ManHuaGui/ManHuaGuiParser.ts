@@ -155,7 +155,7 @@ export const parseSearch = ($: cheerio.Root): MangaTile[] => {
 
 export const isLastPage = ($: cheerio.Root): boolean => {
     // check for the next page button
-    const pageTurnButtons = $('#AspNetPagerResult > a')
+    const pageTurnButtons = $('#AspNetPagerResult > a').toArray()
     // loop through the page turn buttons and check for the next page button
     for (const pageTurnButton of pageTurnButtons) {
         const $el = $(pageTurnButton)

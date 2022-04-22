@@ -68,9 +68,8 @@ export class ManHuaGui extends Source {
 
     async getMangaDetails(mangaId: string): Promise<Manga> {
         const request = createRequestObject({
-            url: `${MHG_DOMAIN}/comic/`,
+            url: `${MHG_DOMAIN}/comic/${mangaId}`,
             method: 'GET',
-            param: mangaId,
         })
 
         const response = await this.requestManager.schedule(request, 1)
@@ -80,9 +79,8 @@ export class ManHuaGui extends Source {
 
     async getChapters(mangaId: string): Promise<Chapter[]> {
         const request = createRequestObject({
-            url: `${MHG_DOMAIN}/comic/`,
+            url: `${MHG_DOMAIN}/comic/${mangaId}`,
             method: 'GET',
-            param: mangaId,
         })
 
         const response = await this.requestManager.schedule(request, 1)
@@ -95,9 +93,8 @@ export class ManHuaGui extends Source {
         chapterId: string
     ): Promise<ChapterDetails> {
         const request = createRequestObject({
-            url: `${MHG_DOMAIN}/comic/`,
+            url: `${MHG_DOMAIN}/comic/${mangaId}/${chapterId}.html`,
             method: 'GET',
-            param: `${mangaId}/${chapterId}.html`,
         })
 
         const response = await this.requestManager.schedule(request, 1)
@@ -112,9 +109,11 @@ export class ManHuaGui extends Source {
         const page: number = metadata?.page ?? 1
 
         const request = createRequestObject({
-            url: `${MHG_DOMAIN}/s/`,
+            url: `${MHG_DOMAIN}/s/${encodeURI(
+                query.title ?? ''
+            )}_p${page}.html`,
+            // url: 'https://www.manhuagui.com/s/%E9%83%BD%E6%98%AF_p1.html',
             method: 'GET',
-            param: `${query.title}_${page}.html`,
         })
 
         const response = await this.requestManager.schedule(request, 1)
