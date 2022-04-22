@@ -9,6 +9,7 @@ import {
     Manga,
     MangaStatus,
     MangaTile,
+    HomeSection,
 } from 'paperback-extensions-common'
 
 const IMAGE_SERVERS = ['https://i.hamreus.com', 'https://cf.hamreus.com']
@@ -171,4 +172,59 @@ export const isLastPage = ($: cheerio.Root): boolean => {
         }
     }
     return true
+}
+
+export const parseHomeSections = (
+    $: cheerio.Root,
+    sectionCallback: (section: HomeSection) => void
+): void => {
+    const sections = [
+        {
+            sectionID: createHomeSection({
+                id: 'hot_ongoing',
+                title: '热门连载漫画',
+            }),
+            selector: $('#cmt-cont > ul:nth-child(1)'),
+        },
+        {
+            sectionID: createHomeSection({
+                id: 'classic_completed',
+                title: '经典完结漫画',
+            }),
+            selector: $('#cmt-cont > ul:nth-child(2)'),
+        },
+        {
+            sectionID: createHomeSection({
+                id: 'newest',
+                title: '最新上架漫画',
+            }),
+            selector: $('#cmt-cont > ul:nth-child(3)'),
+        },
+        {
+            sectionID: createHomeSection({
+                id: 'recent_anime_adaptations',
+                title: '新番漫画',
+            }),
+            selector: $('#cmt-cont > ul:nth-child(4)'),
+        },
+    ]
+
+    for (const section of sections) {
+        const mangaArray: MangaTile[] = []
+        for (const manga of $('li', section.selector).toArray()) {
+            const url = $('a.bcover', manga).attr('href') ?? ''
+            const id = url.split('/')[2] ?? ''
+            const title = $('a.bcover', manga).attr('title') ?? ''
+            const image = `https:${$('a.bcover > img', manga).attr('src')}`
+            mangaArray.push(
+                createMangaTile({
+                    id: id,
+                    title: createIconText({ text: title }),
+                    image: image,
+                })
+            )
+        }
+        section.sectionID.items = mangaArray
+        sectionCallback(section.sectionID)
+    }
 }

@@ -74,4 +74,10 @@ describe('ManHuaGui Tests', () => {
         expect(result?.title, 'No title').to.be.not.null
         expect(result?.subtitleText, 'No subtitle text').to.be.not.null
     })
+
+    it('Testing Home-Page aquisition', async () => {
+        const homePages = await wrapper.getHomePageSections(source)
+        expect(homePages, 'No response from server').to.exist
+        expect(homePages[0]?.items, 'No items present').to.exist
+    })
 })

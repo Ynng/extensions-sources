@@ -11,6 +11,7 @@ import {
     ContentRating,
     Request,
     Response,
+    HomeSection,
 } from 'paperback-extensions-common'
 import {
     parseMangaDetails,
@@ -18,6 +19,7 @@ import {
     parseChapterDetails,
     parseSearch,
     isLastPage,
+    parseHomeSections,
 } from './ManHuaGuiParser'
 
 const MHG_DOMAIN = 'https://www.manhuagui.com'
@@ -122,5 +124,17 @@ export class ManHuaGui extends Source {
             results: manga,
             metadata,
         })
+    }
+
+    override async getHomePageSections(sectionCallback: (section: HomeSection) => void): Promise<void>  {
+        
+        const request = createRequestObject({
+            url: MHG_DOMAIN,
+            method: 'GET'
+        })
+
+        const response = await this.requestManager.schedule(request, 1)
+        const $ = this.cheerio.load(response.data)
+        parseHomeSections($, sectionCallback)
     }
 }
