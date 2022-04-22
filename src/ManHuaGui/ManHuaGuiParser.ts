@@ -132,3 +132,37 @@ export const parseChapterDetails = (
         longStrip: false,
     })
 }
+
+export const parseSearch = ($: cheerio.Root): MangaTile[] => {
+    const mangaItems: MangaTile[] = []
+
+    for (const manga of $('div.book-result > ul > li').toArray()) {
+        const link = $('a.bcover', manga).attr('href') ?? ''
+        const id = link.split('/')[2] ?? ''
+        const title = $('a.bcover', manga).attr('title') ?? ''
+        const image = `https:${$('a.bcover > img', manga).attr('src')}`
+        mangaItems.push(
+            createMangaTile({
+                id: id,
+                title: createIconText({ text: title }),
+                image: image,
+            })
+        )
+    }
+
+    return mangaItems
+}
+
+export const isLastPage = ($: cheerio.Root): boolean => {
+    // check for the next page button
+    const pageTurnButtons = $('#AspNetPagerResult > a')
+    // loop through the page turn buttons and check for the next page button
+    for (const pageTurnButton of pageTurnButtons) {
+        const $el = $(pageTurnButton)
+        const text = $el.text() ?? ''
+        if (text === '下一页'|| text === '下一頁') {
+            return false
+        }
+    }
+    return true
+}

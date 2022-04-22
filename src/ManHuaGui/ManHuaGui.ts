@@ -19,6 +19,8 @@ import {
     parseMangaDetails,
     parseChapters,
     parseChapterDetails,
+    parseSearch,
+    isLastPage,
 } from './ManHuaGuiParser'
 
 const MHG_DOMAIN = 'https://www.manhuagui.com'
@@ -101,5 +103,28 @@ export class ManHuaGui extends Source {
         const response = await this.requestManager.schedule(request, 1)
         const $ = this.cheerio.load(response.data)
         return parseChapterDetails($, mangaId, chapterId, response.data)
+    }
+
+    async getSearchResults(
+        query: SearchRequest,
+        metadata: any
+    ): Promise<PagedResults> {
+        const page: number = metadata?.page ?? 1
+
+        const request = createRequestObject({
+            url: `${MHG_DOMAIN}/s/`,
+            method: 'GET',
+            param: `${query.title}_${page}.html`,
+        })
+
+        const response = await this.requestManager.schedule(request, 1)
+        const $ = this.cheerio.load(response.data)
+        const manga = parseSearch($)
+        metadata = !isLastPage($) ? { page: page + 1 } : undefined
+
+        return createPagedResults({
+            results: manga,
+            metadata,
+        })
     }
 }
