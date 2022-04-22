@@ -5,12 +5,11 @@ String.prototype.splic = function (f) {
     return LZString.decompressFromBase64(this).split(f)
 }
 // fake "SMH" struct to extract the image data
-let SMH = {
-    imgData: function (imageInfo) {
+var SMH = {
+    imgData: function (imageData) {
         return {
             preInit: function () {
-                console.log(imageInfo)
-                return imageInfo
+                imageInfo = imageData;
             },
         }
     },

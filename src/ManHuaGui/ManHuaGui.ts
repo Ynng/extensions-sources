@@ -1,16 +1,13 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     Source,
     Manga,
     Chapter,
     ChapterDetails,
-    HomeSection,
     SearchRequest,
     PagedResults,
     SourceInfo,
-    MangaUpdates,
-    TagType,
-    TagSection,
     ContentRating,
     Request,
     Response,

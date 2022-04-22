@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable modules-newline/import-declaration-newline */
 import cheerio from 'cheerio'
-import { APIWrapper, SearchRequest, Source } from 'paperback-extensions-common'
+import { APIWrapper, Source } from 'paperback-extensions-common'
 import { ManHuaGui } from '../ManHuaGui/ManHuaGui'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
@@ -14,6 +14,34 @@ describe('ManHuaGui Tests', () => {
 
     const mangaId = '17332' // kaguya sama
 
+    it('Retrieve Manga Details', async () => {
+        const details = await wrapper.getMangaDetails(source, mangaId)
+        expect(
+            details,
+            'No results found with test-defined ID [' + mangaId + ']'
+        ).to.exist
+
+        // Validate that the fields are filled
+        const data = details
+        expect(data.image, 'Missing Image').to.be.not.empty
+        expect(data.status, 'Missing Status').to.exist
+        expect(data.desc, 'Missing Description').to.be.not.empty
+        expect(data.titles, 'Missing Titles').to.be.not.empty
+        //expect(data.rating, 'Missing Rating').to.exist
+    })
+
+    it('Get Chapters', async () => {
+        const data = await wrapper.getChapters(source, mangaId)
+
+        expect(data, 'No chapters present for: [' + mangaId + ']').to.not.be
+            .empty
+
+        const entry = data[0]
+        expect(entry?.id, 'No ID present').to.not.be.empty
+        expect(entry?.name, 'No title available').to.not.be.empty
+        expect(entry?.chapNum, 'No chapter number present').to.not.be.null
+    })
+
     it('Get Chapter Details', async () => {
         const chapters = await wrapper.getChapters(source, mangaId)
 
@@ -22,7 +50,6 @@ describe('ManHuaGui Tests', () => {
             mangaId,
             chapters[0]?.id ?? 'unknown'
         )
-        console.log(data)
         expect(data, 'No server response').to.exist
         expect(data, 'Empty server response').to.not.be.empty
 
