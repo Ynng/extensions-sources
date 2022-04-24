@@ -1,8 +1,8 @@
 {
-  "name": "ynngs-official",
+  "name": "ynngs-chinese-language-extensions",
   "version": "1.0.1",
-  "description": "Ynng's Paperback Extensions",
-  "repositoryName": "Ynng's Extensions",
+  "description": "Ynng's Chinese Language Extensions",
+  "repositoryName": "Ynng's Chinese Language Extensions",
   "baseURL": "https://extensions.ynng.ca/",
   "sources": [
     {
