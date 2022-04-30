@@ -1,4 +1,4 @@
-# [Ynng's Chinese Language Extensions](https://extensions.ynng.ca/)
+# [Ynng's Chinese Language Extensions](https://ynng.github.io/extensions-sources/)
 [Github Repo](https://github.com/Ynng/extensions-sources)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/21a2f00b-6711-458e-93c7-bd901e95a429/deploy-status)](https://app.netlify.com/sites/ynng-paperback-extensions/deploys)

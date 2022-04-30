@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "Ynng's Chinese Language Extensions",
   "repositoryName": "Ynng's Chinese Language Extensions",
-  "baseURL": "https://extensions.ynng.ca/",
+  "baseURL": "https://ynng.github.io/extensions-sources/",
   "sources": [
     {
       "name": "ManHuaGui(漫画柜)"
@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/Ynng/extension-sources/issues"
   },
-  "homepage": "https://extensions.ynng.ca/",
+  "homepage": "https://ynng.github.io/extensions-sources/",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^3.0.0",
