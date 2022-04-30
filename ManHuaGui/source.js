@@ -6245,7 +6245,7 @@ const parseChapters = ($, mangaId) => {
         const name = (_b = $el.attr('title')) !== null && _b !== void 0 ? _b : '';
         // remove .html from id
         const id = ((_c = url.split('/')[3]) !== null && _c !== void 0 ? _c : '').replace(/\.html$/, '');
-        const chapNum = parseInt((_e = ((_d = name.match(/\d+/)) !== null && _d !== void 0 ? _d : ['0'])[0]) !== null && _e !== void 0 ? _e : '0', 10);
+        const chapNum = parseFloat((_e = ((_d = name.match(/[\d.]+/)) !== null && _d !== void 0 ? _d : ['0'])[0]) !== null && _e !== void 0 ? _e : '0');
         chapters.push(createChapter({
             id: id,
             name: name,
@@ -6285,11 +6285,9 @@ const parseChapterDetails = (_$, mangaId, chapterId, rawResponse) => {
     };
     eval(jsDecodeFunc + 'eval' + evalString);
     const imageData = imageInfo;
-    console.log(imageInfo);
     const images = imageData.files.map((image) => {
         return `${IMAGE_SERVERS[0]}${encodeURI(imageData.path)}${image}`;
     });
-    console.log(images);
     return createChapterDetails({
         id: chapterId,
         mangaId: mangaId,
